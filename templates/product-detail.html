@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Товар</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+</head>
+<body>
+
+{% extends "base.html" %}
+{% block title %}{% endblock %}
+{% block content %}
+<style>
+    body {
+    color: var(--primary-text);
+}
+
+.container {
+    max-width: 1000px;
+    margin: auto;
+}
+
+.product-detail {
+    margin-top: 40px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    border-radius: 8px;
+    background: var(--bg-color);
+    box-shadow: var(--shadow-element);
+}
+
+.product-image {
+    max-width: 350px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.product-image img {
+    width: 100%;
+    transition: transform 0.3s;
+}
+
+.product-image:hover img {
+    transform: scale(1.1);
+}
+
+.product-info {
+    flex: 1;
+    padding-left: 20px;
+    color: var(--text-color)
+}
+
+.product-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+.product-description {
+    margin-bottom: 10px;
+}
+
+.product-price {
+    font-size: 1.5rem;
+        color: #00d9ff;
+}
+
+/* === BUTTON STYLES === */
+.buttons {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.btn {
+    border-radius: 50px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: 0.3s ease-in-out;
+    text-transform: uppercase;
+}
+
+.btn a {
+    color: white;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background: #007bff;
+    border: none;
+}
+
+.btn-primary:hover {
+    background: #0056b3;
+    color: var(--text-color)
+}
+
+.btn-success {
+    background: #28a745;
+    border: none;
+}
+
+.btn-success:hover {
+    background: #218838;
+}
+
+.btn-outline-secondary {
+    border: 2px solid #6c757d;
+    color: #6c757d;
+    background: transparent;
+}
+
+.btn-outline-secondary:hover {
+    background: #6c757d;
+    color: white;
+}
+
+/* === RELATED PRODUCTS STYLES === */
+.related-title {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 1.6rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: var(--text-color)
+}
+
+.related-products {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.related-product {
+    text-align: center;
+    background: var(--bg-color);
+    padding: 15px;
+    border-radius: 10px;
+    width: 200px;
+    transition: transform 0.3s;
+    box-shadow: var(--shadow-element);
+    margin-bottom: 30px;
+}
+
+.related-product:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-element);
+}
+
+
+.related-product img {
+    width: 180px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+
+.related-product h3 {
+    font-size: 1rem;
+    margin: 10px 0;
+    font-weight: bold;
+}
+
+.related-product .btn {
+    width: 100%;
+    font-size: 0.9rem;
+    padding: 8px 15px;
+}
+
+@media (max-width: 768px) {
+    .product-detail {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .product-info {
+        padding-left: 0;
+    }
+
+    .related-products {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+</style>
+<div class="container py-4">
+    <div class="product-detail" data-aos="fade-up">
+        <div class="product-image">
+            <img src="{{ product.image.url }}" alt="Product Image">
+        </div>
+        <div class="product-info">
+            <h1 class="product-title">{{ product.title }}</h1>
+            <p class="product-description">{{ product.description }}</p>
+            <p class="product-price">{{ product.price }} $</p>
+            <div class="buttons">
+                <button class="btn btn-primary btn-custom add-to-cart-btn" data-product-id="{{ product.id }}"><a
+                        href="{% url 'cart'%}" style="color: white; list-style: none; text-decoration: none;">
+                    Купить</a></button>
+                <button class="btn btn-success add-to-cart-btn" data-product-id="{{ product.id }}">В корзину</button>
+                <a href="{% url 'shop' %}" class="btn btn-outline-secondary">Вернуться в магазин</a>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="related-title" data-aos="fade-up">Похожие товары</h2>
+    <div style="color: var(--text-color)" class="related-products" data-aos="fade-up">
+        {% for related_product in related_products %}
+        <div class="related-product" style="color: var(--text-color)">
+            <div class="related_product-image">
+                <img src="{{ related_product.image.url }}" alt="Related Product">
+            </div>
+
+            <h3>{{ related_product.title|slice:"14" }}</h3>
+            <a href="{% url 'product-detail' related_product.id %}" class="btn btn-success"
+               style="background-color: var(--hover-li);">Перейти</a>
+        </div>
+        {% empty %}
+        <p>Похожих товаров не найдено</p>
+        {% endfor %}
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    AOS.init();
+   document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+    button.addEventListener('click', function () {
+        const productId = this.getAttribute('data-product-id');
+        fetch(`/cart/add/${productId}/`, { method: 'GET' })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Товар добавлен в корзину!");
+                    location.reload();
+                }
+            });
+    });
+});
+
+</script>
+
+{% endblock %}
+</body>
+</html>

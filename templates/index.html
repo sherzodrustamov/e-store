@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E - Store</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css">
+    <style>
+        .swiper-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: auto;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 50px;
+        }
+
+        .swiper-slide img {
+            width: 100%;
+            height: 500px;
+            border-radius: 10px;
+        }
+
+        .category-container {
+            margin: auto;
+            padding: 20px;
+        }
+
+        .category-swiper .swiper-slide {
+            width: 300px;
+            background: #FFD700;
+            padding: 10px 15px;
+            text-align: center;
+            border-radius: 5px;
+
+            cursor: pointer;
+        }
+
+        .category-swiper .swiper-slide a {
+            font-weight: bold;
+            list-style: none;
+            text-decoration: none;
+
+        }
+
+        .products-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            justify-items: center;
+        }
+
+        .product-card {
+            background: var(--bg-color);
+            color: var(--text-color);
+            box-shadow: 0px 7px 10px var(--hover-li);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            transition: 0.3s;
+            margin-bottom: 30px;
+            margin-top: 30px;
+            width: 220px;
+        }
+
+        .product-card:hover {
+            transform: scale(1.05);
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .buy-btn {
+            background: var(--hover-li);
+            color: white;
+            padding: 8px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .buy-btn:hover {
+            background: var(--bg-color);
+            transition: 0.3s;
+            border: 2px solid var(--hover-li);
+        }
+
+        @media (max-width: 768px) {
+            .swiper-slide img {
+                height: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    {% extends "base.html" %}
+
+    {% block content %}
+
+    <div class="swiper-container hero-swiper">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide"><img
+                    src="https://www.naturephotographie.com/wp-content/uploads/2018/07/The-Song-of-the-World.jpg"
+                    alt="Banner 1"></div>
+            <div class="swiper-slide"><img
+                    src="https://th.bing.com/th/id/R.4434ad74e5a26ec1d3b347f4f0841d50?rik=7j0X2htpowd%2b6g&pid=ImgRaw&r=0"
+                    alt="Banner 2"></div>
+            <div class="swiper-slide"><img
+                    src="https://onedaystop.com/wp-content/uploads/2015/08/DSC07431-2000x1125.jpg" alt="Banner 3">
+            </div>
+        </div>
+    </div>
+
+    <div class="category-container">
+        <h2 style="text-align: center; margin-bottom: 15px;">Категории</h2>
+        <div class="swiper-container category-swiper">
+            <div class="swiper-wrapper">
+                {% for category in categories %}
+                <div class="swiper-slide"><a href="{%url 'shop'%}?category={{ category.id }}"
+                        style="color: black">{{category.name}}</a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <h2 class="text-center mt-4">Новые товары</h2>
+    <div class="swiper-container product-swiper">
+        <div class="swiper-wrapper">
+            {% for product in products %}
+            <div class="swiper-slide product-card" data-aos="fade-up">
+                <img src="{{ product.image.url }}"
+                    alt="Фото продукта">
+                <h3 style="font-size: 14px; margin-top: 10px">{{ product.title|slice:"14"}}</h3>
+                <p class="price">{{ product.price }} $</p>
+                <button class="buy-btn"><a href="{% url 'product-detail' product.id %}"
+                        style="color: white; list-style: none; text-decoration: none;">Перейти</a>
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+    <script>
+
+        new Swiper('.hero-swiper', {
+            loop: true,
+            autoplay: { delay: 3000 },
+            pagination: { el: '.swiper-pagination', clickable: true },
+        });
+        new Swiper('.category-swiper', {
+            slidesPerView: 'auto',
+            autoplay: { delay: 2000 },
+            spaceBetween: 15,
+            freeMode: true,
+        });
+
+        new Swiper('.product-swiper', {
+            slidesPerView: 'auto',
+            autoplay: { delay: 3000 },
+            spaceBetween: 35,
+            freeMode: true,
+        });
+    </script>
+    {%endblock%}
+</body>
+
+</html>
